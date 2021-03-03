@@ -1,48 +1,59 @@
-<div class="calc">
+<div class="calc" (keydown.end)="keydownEnd($event)" (keydown.delete)="keydownDelete($event)">
     <div class="header">
         <div class="titles">
             Simple Calculator
         </div>
     </div>
-    <app-input></app-input>
-
-    <div class="row">
-        <button class="button ac">ac</button>
-        <button class="button ce">ce</button>
-        <button class="button div">%</button>
-        <button class="button mult">x</button>
+    <div class="display">
+        <div class="display-indicate">
+            max
+        </div>
+        <div class="display-main" id="main">
+            {{ mainText }}
+        </div>
+    
+        <div class="display-operations">
+            {{ subText }}
+        </div>
     </div>
 
     <div class="row">
-        <button class="button seven">7</button>
-        <button class="button eight">8</button>
-        <button class="button nine">9</button>
-        <button class="button minus">−</button>
+        <button class="button ac" (click)="clear()">ac</button>
+        <button class="button ce" (click)="delete()">ce</button>
+        <button class="button div" (click)="pressKey('/')">%</button>
+        <button class="button mult" (click)="pressKey('*')">x</button>
     </div>
 
     <div class="row">
-        <button class="button four">4</button>
-        <button class="button five">5</button>
-        <button class="button six">6</button>
-        <button class="button plus">+</button>
+        <button class="button seven" (click)="pressKey('7')">7</button>
+        <button class="button eight" (click)="pressKey('8')">8</button>
+        <button class="button nine" (click)="pressKey('9')">9</button>
+        <button class="button minus" (click)="pressKey('-')">−</button>
+    </div>
+
+    <div class="row">
+        <button class="button four" (click)="pressKey('4')">4</button>
+        <button class="button five" (click)="pressKey('5')">5</button>
+        <button class="button six" (click)="pressKey('6')">6</button>
+        <button class="button plus" (click)="pressKey('+')">+</button>
     </div>
 
     <div class="bottom-row">
         <div class="left">
             <div class="row">
-                <button class="button one">1</button>
-                <button class="button two">2</button>
-                <button class="button three">3</button>
+                <button class="button one" (click)="pressKey('1')">1</button>
+                <button class="button two" (click)="pressKey('2')">2</button>
+                <button class="button three" (click)="pressKey('3')">3</button>
             </div>
 
             <div class="row">
-                <button class="button zero">0</button>
-                <button class="button dot">.</button>
+                <button class="button zero" (click)="pressKey('0')">0</button>
+                <button class="button dot" (click)="pressKey('.')">.</button>
             </div>
         </div>
 
         <div class="right">
-            <div class="button eq">=</div>
+            <div class="button eq" (click)="equals()">=</div>
         </div>
 
     </div>
