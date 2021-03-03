@@ -18,6 +18,7 @@ export class CalcComponent implements OnInit {
   operatorSet = false;
 
   ngOnInit(): void {
+
   }
 
   pressKey(key: string) {
@@ -47,6 +48,7 @@ export class CalcComponent implements OnInit {
    this.calculationString = '';
    this.answered = false;
    this.operatorSet = false;
+   document.getElementById('max').style.color = 'rgba(255, 255, 255, 0.05)';
  }
 calcAnswer() {
   let formula = this.mainText;
@@ -62,17 +64,25 @@ calcAnswer() {
   if (lastKey === '/' || lastKey === '*' || lastKey === '-' || lastKey === '+' || lastKey === '.')  {
     formula=formula.substr(0,formula.length - 1);
   }
+  this.subText = this.mainText;
   this.mainText = eval(formula);
 }
 
 equals() {
   if(this.mainText != ''){
     this.calcAnswer();
-    this.subText = this.mainText;
+
+    var checkLength = `${this.mainText}`;
+
+    if(checkLength.length > 10){
+      document.getElementById('max').style.color = 'white';
+    }
+
     if (this.mainText=="0") this.mainText="";
   }else{
     this.clear();
   }
+
 }
  delete(){
   if (this.mainText !="") {
