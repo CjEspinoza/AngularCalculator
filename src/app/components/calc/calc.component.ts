@@ -22,7 +22,7 @@ export class CalcComponent implements OnInit {
   }
 
   pressKey(key: string) {
-    if (key === '/' || key === 'x' || key === '-' || key === '+') {
+    if (key === '/' || key === '*' || key === '-' || key === '+') {
        const lastKey = this.mainText[this.mainText.length - 1];
        if (lastKey === '/' || lastKey === '*' || lastKey === '-' || lastKey === '+')  {
          this.operatorSet = true;
