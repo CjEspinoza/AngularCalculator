@@ -2,6 +2,7 @@ body {
     background: lightblue;
     font-family: Arial, sans-serif;
     transition: background .1s;
+    overflow-y: hidden;
 }
 
 .calc {
@@ -42,6 +43,11 @@ body {
 
 .display-main {
     height: 38px;
+    display:inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 13ch
 }
 
 .display-indicate {
