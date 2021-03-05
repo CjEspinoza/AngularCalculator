@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BodyComponent } from './components/body/body.component';
 import { CalcComponent } from './components/calc/calc.component';
 import { TipsComponent } from './components/tips/tips.component';
+import { DecimalPipe } from '@angular/common';
 
 
 @NgModule({
@@ -19,8 +20,9 @@ import { TipsComponent } from './components/tips/tips.component';
   imports: [
     BrowserModule,
     AppRoutingModule
+
   ],
-  providers: [],
+  providers: [DecimalPipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

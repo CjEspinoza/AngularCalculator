@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-calc',
@@ -7,11 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalcComponent implements OnInit {
 
-  constructor() { }
+  constructor(private decimal : DecimalPipe) { }
   subText = '';
   mainText = '';
-  operand1: number;
-  operand2: number;
+  num1: number;
+  num2: number;
   operator = '';
   calculationString = ''; 
   answered = false; 
@@ -30,12 +31,11 @@ export class CalcComponent implements OnInit {
        if ((this.operatorSet) || (this.mainText === '')) {
          return;
        }
-       this.operand1 = parseFloat(this.mainText);
-       this.operand2 = parseFloat(this.mainText);
+       this.num1 = parseFloat(this.mainText);
        this.operator = key;
        this.operatorSet = true;
     }
-    if (this.mainText.length === 10) {
+    if (this.mainText.length === 12) {
       return;
     }
     this.mainText += key;
@@ -50,55 +50,68 @@ export class CalcComponent implements OnInit {
    this.operatorSet = false;
    document.getElementById('max').style.color = 'rgba(255, 255, 255, 0.05)';
  }
-calcAnswer() {
-  let formula = this.mainText;
-
-  let lastKey = formula[formula.length - 1];
-
-  if (lastKey === '.')  {
-    formula=formula.substr(0,formula.length - 1);
-  }
-
-  lastKey = formula[formula.length - 1];
-
-  if (lastKey === '/' || lastKey === '*' || lastKey === '-' || lastKey === '+' || lastKey === '.')  {
-    formula=formula.substr(0,formula.length - 1);
-  }
-  this.subText = this.mainText;
-  this.mainText = eval(formula);
-}
-
 equals() {
-  if(this.mainText != ''){
-    this.calcAnswer();
+  this.calculationString = this.mainText;
+    this.num2 = parseFloat(this.mainText.split(this.operator)[1]);
+    if (this.operator === '/') {
+      this.subText = this.mainText;
+      this.mainText = (this.num1 / this.num2).toString();
+      this.subText = this.calculationString;
+      if (this.mainText.length > 9) {
+        this.mainText = this.mainText.substr(0, 9);
+      }
+    } else if (this.operator === '*') {
+      this.subText = this.mainText;
+      this.mainText = (this.num1 * this.num2).toString();
+      this.subText = this.calculationString;
+      if (this.mainText.length > 9) {
+        this.mainText = 'ERROR';
+        this.subText = 'Range Exceeded';
+      }
+    } else if (this.operator === '-') {
+      this.subText = this.mainText;
+      this.mainText = (this.num1 - this.num2).toString();
+      this.subText = this.calculationString;
+    } else if (this.operator === '+') {
+      this.subText = this.mainText;
+      this.mainText = (this.num1 + this.num2).toString();
+      this.subText = this.calculationString;
+      if (this.mainText.length > 9) {
+        this.mainText = 'ERROR';
+        this.subText = 'Range Exceeded';
+      }
+    } else {
+      this.subText = 'ERROR: Invalid Operation';
+    }
+    this.answered = true;
 
     var checkLength = `${this.mainText}`;
 
     if(checkLength.length > 10){
-      document.getElementById('max').style.color = 'white';
+      document.getElementById('max').style.color = 'gray';
+      this.subText = this.mainText;
     }
-
-    if (this.mainText=="0") this.mainText="";
-  }else{
-    this.clear();
-  }
-
 }
  delete(){
-  if (this.mainText !="") {
-    this.mainText=this.mainText.substr(0, this.mainText.length-1);
-  }
+   if(this.answered == true){
+    this.clear();
+   }else{
+    if (this.mainText !="") {
+      this.mainText=this.mainText.substr(0, this.mainText.length-1);
+    }
+   }
+
  }
  keydownDelete($event){
-  if($event.key == 'Delete'){
+  if($event.key =='Delete'){
+    this.clear();
+  }
+ }
+ keydownEnd($event){
+  if($event.key == 'End'){
     if (this.mainText !="") {
       this.mainText=this.mainText.substr(0, this.mainText.length-1);
     }
     }
- }
- keydownEnd($event){
-   if($event.key =='End'){
-     this.clear();
-   }
- }
+}
 }
