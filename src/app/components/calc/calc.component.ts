@@ -17,29 +17,45 @@ export class CalcComponent implements OnInit {
   calculationString = ''; 
   answered = false; 
   operatorSet = false;
+  formula = '';
 
   ngOnInit(): void {
-
+  }
+  pressKey(key: string) {
+    if (key==".") {
+      if (this.mainText !="" ) {
+ 
+        const lastNum=this.getOperator()
+        if (lastNum.lastIndexOf(".") >= 0) return;
+      }
+    }
+    if (key=="0") {
+      if (this.mainText=="" ) {
+        return;
+      }
+      const PrevKey = this.mainText[this.mainText.length - 1];
+      if (PrevKey === '/' || PrevKey === '*' || PrevKey === '-' || PrevKey === '+')  {
+          return;
+      }
+    }
+    this.mainText = this.mainText + key;
+    this.formula = this.mainText;
   }
 
-  pressKey(key: string) {
-    if (key === '/' || key === '*' || key === '-' || key === '+') {
-       const lastKey = this.mainText[this.mainText.length - 1];
-       if (lastKey === '/' || lastKey === '*' || lastKey === '-' || lastKey === '+')  {
-         this.operatorSet = true;
-       }
-       if ((this.operatorSet) || (this.mainText === '')) {
-         return;
-       }
-       this.num1 = parseFloat(this.mainText);
-       this.operator = key;
-       this.operatorSet = true;
-    }
-    if (this.mainText.length === 12) {
-      return;
-    }
-    this.mainText += key;
- }
+  getOperator() {
+    let index:number;
+
+    index = this.mainText.toString().lastIndexOf("+")
+
+    if (this.mainText.toString().lastIndexOf("-") > index)
+     index=this.mainText.lastIndexOf("-")
+    else if (this.mainText.toString().lastIndexOf("*") > index) 
+      index=this.mainText.lastIndexOf("*")
+    else if (this.mainText.toString().lastIndexOf("/") > index) 
+     index=this.mainText.lastIndexOf("/")
+
+    return this.mainText.substr(index+1)
+  }
 
  clear(){
    this.mainText = '';
@@ -50,40 +66,22 @@ export class CalcComponent implements OnInit {
    this.operatorSet = false;
    document.getElementById('max').style.color = 'rgba(255, 255, 255, 0.05)';
  }
-equals() {
-  this.calculationString = this.mainText;
-    this.num2 = parseFloat(this.mainText.split(this.operator)[1]);
-    if (this.operator === '/') {
-      this.subText = this.mainText;
-      this.mainText = (this.num1 / this.num2).toString();
-      this.subText = this.calculationString;
-      if (this.mainText.length > 9) {
-        this.mainText = this.mainText.substr(0, 9);
-      }
-    } else if (this.operator === '*') {
-      this.subText = this.mainText;
-      this.mainText = (this.num1 * this.num2).toString();
-      this.subText = this.calculationString;
-      if (this.mainText.length > 9) {
-        this.mainText = 'ERROR';
-        this.subText = 'Range Exceeded';
-      }
-    } else if (this.operator === '-') {
-      this.subText = this.mainText;
-      this.mainText = (this.num1 - this.num2).toString();
-      this.subText = this.calculationString;
-    } else if (this.operator === '+') {
-      this.subText = this.mainText;
-      this.mainText = (this.num1 + this.num2).toString();
-      this.subText = this.calculationString;
-      if (this.mainText.length > 9) {
-        this.mainText = 'ERROR';
-        this.subText = 'Range Exceeded';
-      }
-    } else {
-      this.subText = 'ERROR: Invalid Operation';
+
+calculate() {
+  let equation = this.mainText;
+ 
+    let checkInput = equation[equation.length - 1];
+ 
+    if (checkInput === '.')  {
+      equation=equation.substr(0,equation.length - 1);
     }
-    this.answered = true;
+ 
+    checkInput = equation[equation.length - 1];
+ 
+    if (checkInput === '/' || checkInput === '*' || checkInput === '-' || checkInput === '+' || checkInput === '.')  {
+      equation=equation.substr(0,equation.length - 1);
+    }
+    this.subText = eval(equation);
 
     var checkLength = `${this.mainText}`;
 
@@ -92,6 +90,20 @@ equals() {
       this.subText = this.mainText;
     }
 }
+equals(){
+  this.subText = this.formula;
+  this.calculate();
+  if (this.mainText=="0") this.mainText="";
+}
+pressOperator(op: string) {
+  let checkInput = this.mainText[this.mainText.length - 1];
+  if (checkInput === '/' || checkInput === '*' || checkInput === '-' || checkInput === '+')  {
+    return;
+  }
+  this.mainText = this.mainText + op
+  this.calculate();
+}
+
  delete(){
    if(this.answered == true){
     this.clear();
@@ -100,7 +112,6 @@ equals() {
       this.mainText=this.mainText.substr(0, this.mainText.length-1);
     }
    }
-
  }
  keydownDelete($event){
   if($event.key =='Delete'){
